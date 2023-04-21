@@ -1,5 +1,6 @@
 <!-- chat/templates/chat/room.html -->
 {% load static %}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8"/>
@@ -10,17 +11,22 @@
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     {{ room_name|json_script:"room-name" }}
-    <script scr="{% static 'reconnecting-webscoket.js' %}"></script>
+    <script scr="{% static 'reconnecting-websocket.js' %}"></script>
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        var username = "{{ user }}";
 
-        const chatSocket = new ReconnetingWebSocket(
+        const chatSocket = new ReconnectingWebSocket(
             'ws://'
             + window.location.host
             + '/ws/chat/'
             + roomName
             + '/'
         );
+
+        chatSocket.onopen = function(e) {
+            fetchMessages();
+        }
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
