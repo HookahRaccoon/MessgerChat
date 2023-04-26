@@ -11,10 +11,9 @@
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
     {{ room_name|json_script:"room-name" }}
-    <script scr="{% static 'reconnecting-websocket.js' %}"></script>
+    <script src="{% static 'reconnecting-websocket.js' %}"></script>
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        var username = "{{ user }}";
 
         const chatSocket = new ReconnectingWebSocket(
             'ws://'
